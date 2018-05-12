@@ -1,23 +1,21 @@
 from flask import Flask, render_template, request
+from model.Jogo import Jogo
+
 
 app = Flask(__name__)
 
-
-class Jogo:
-    def __init__(self, nome, categoria, console):
-        self.nome = nome
-        self.categoria = categoria
-        self.console = console
-
+lista_jogos = []
 
 jogo1 = Jogo('Super Mario', 'Ação', 'SNES')
 jogo2 = Jogo('Pokemon Gold', 'RPG', 'GBA')
-lista = [jogo1, jogo2]
+
+lista_jogos.append(jogo1)
+lista_jogos.append(jogo2)
 
 
 @app.route('/')
 def index():
-    return render_template('lista.html', titulo='Jogos', jogos=lista)
+    return render_template('lista.html', titulo='Jogos', jogos=lista_jogos)
 
 
 @app.route('/novo')
@@ -31,8 +29,8 @@ def criar():
     categoria = request. form['categoria']
     console = request. form['console']
     jogo = Jogo(nome, categoria, console)
-    lista.append(jogo)
-    return render_template('lista.html', titulo='Jogo', jogos=lista)
+    lista_jogos.append(jogo)
+    return render_template('lista.html', titulo='Jogo', jogos=lista_jogos)
 
 
 app.run(debug=True)

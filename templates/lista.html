@@ -21,9 +21,9 @@
         <tbody>
         {% for jogo in jogos %}
                         <tr>
-                            <td>{{ jogo.nome }}</td>
-                            <td>{{ jogo.categoria }}</td>
-                            <td>{{ jogo.console }}</td>
+                            <td>{{ jogo.nome | title}}</td>
+                            <td>{{ jogo.categoria | title }}</td>
+                            <td>{{ jogo.console | title}}</td>
                         </tr>
         {% endfor %}
         </tbody>
