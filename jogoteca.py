@@ -1,21 +1,32 @@
 from flask import Flask, render_template, request, redirect, session, flash, url_for
 from model.Jogo import Jogo
-
+from model.Usuario import Usuario
+from dao.dao import JogoDao
+from flask_mysqldb import MySQL
 
 app = Flask(__name__)
 app.secret_key = 'alura'
 
-lista_jogos = []
+app.config['MYSQL_HOST'] = "127.0.0.1"
+app.config['MYSQL_USER'] = "root"
+app.config['MYSQL_PASSWORD'] = "123456"
+app.config['MYSQL_DB'] = "jogoteca"
+app.config['MYSQL_PORT'] = 3306
+db = MySQL(app)
+jogo_dao = JogoDao(db)
 
-jogo1 = Jogo('super mario', 'Ação', 'SNES')
-jogo2 = Jogo('Pokemon Gold', 'RPG', 'GBA')
+usuario1 = Usuario('luan', 'Luiz Antonio Marques', '1234')
+usuario2 = Usuario('Nico', 'Nico Steppat', '7a1')
+usuario3 = Usuario('flavio', 'flavio Almeida', 'javascript')
 
-lista_jogos.append(jogo1)
-lista_jogos.append(jogo2)
+usuarios = {usuario1.id: usuario1,
+            usuario2.id: usuario2,
+            usuario3.id: usuario3}
 
 
 @app.route('/')
 def index():
+    lista_jogos = jogo_dao.listar()
     return render_template('lista.html', titulo='Jogos', jogos=lista_jogos)
 
 
@@ -32,6 +43,7 @@ def criar():
     categoria = request. form['categoria']
     console = request. form['console']
     jogo = Jogo(nome, categoria, console)
+    jogo_dao.salvar(jogo)
     lista_jogos.append(jogo)
     return redirect(url_for('index'))
 
@@ -44,11 +56,13 @@ def login():
 
 @app.route('/autenticar', methods=['POST', ])
 def autenticar():
-    if 'mestra' == request.form['senha']:
-        session['usuario_logado'] = request.form['usuario']
-        flash(request.form['usuario'] + ' logou com sucesso!')
-        proxima_pagina = request.form['proxima']
-        return redirect(proxima_pagina)
+    if request.form['usuario'] in usuarios:
+        usuario = usuarios[request.form['usuario']]
+        if usuario.senha == request.form['senha']:
+            session['usuario_logado'] = usuario.id
+            flash(usuario.nome + ' logou com sucesso!')
+            proxima_pagina = request.form['proxima']
+            return redirect(proxima_pagina)
     else:
         flash('Não logado, tente novamente!')
         return redirect(url_for('login'))

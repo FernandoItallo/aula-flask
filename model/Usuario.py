@@ -1,8 +1,7 @@
-class Pessoa:
+class Usuario:
 
-    def __init__(self, id, login, nome, senha):
+    def __init__(self, id, nome, senha):
         self.__id = id
-        self.__login = login
         self.__nome = nome
         self.__senha = senha
 
@@ -13,14 +12,6 @@ class Pessoa:
     @id.setter
     def id(self, value):
         self.__id = value
-
-    @property
-    def login(self):
-        return self.__login
-
-    @login.setter
-    def login(self, value):
-        self.__login = value
 
     @property
     def nome(self):
