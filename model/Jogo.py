@@ -1,10 +1,18 @@
 class Jogo:
 
-    def __init__(self, nome, categoria, console):
+    def __init__(self, nome, categoria, console, id=None):
         self.__nome = nome
         self.__categoria = categoria
         self.__console = console
+        self.__id = id
 
+    @property
+    def id(self):
+        return self.__id
+
+    @id.setter
+    def id(self, value):
+        self.__id = value
 
     @property
     def nome(self):
